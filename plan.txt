@@ -2,12 +2,13 @@ First thoughts
 test output file has no punctuation (no 's but does include s)
 time bash.sh of the provided solution change to save file for test comparison add to make file
 write test to compare byte slice of goldenFile to output of function
-stream in the file maybe a custom filter to lower case out words
+stream in the file maybe a custom filter to lower case out words with runes and shifts
 implement simple go map solution (to later replace with custom hash)
 hash into buckets or maybe binary heap
 sort the reaming 20 descending order
 print to stout or file ?
 
 gotchas
-cant use go maps builtin len and hash map other std lib
+cant use go maps builtin len and hash map other std lib containers(linked list)
+dont use strings package in go
 says 64bit linux so prob wants 64 bit hash to reduce collision

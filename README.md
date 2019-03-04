@@ -24,5 +24,7 @@ user    0m1.408s
 sys     0m0.012s
 
 ## todo
+see plan.txt for requirements
+
 use binary-hash tree or other hash map
 add bench and profile to improve time taken

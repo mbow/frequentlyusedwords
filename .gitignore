@@ -1,0 +1,15 @@
+# Code Coverage
+*.cov
+*.out
+
+# Binaries
+bin/
+
+# Developer
+.idea
+.env
+.envrc
+.DS_Store
+*.cov
+vendor/*
+

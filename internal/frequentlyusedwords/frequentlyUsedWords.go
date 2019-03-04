@@ -63,6 +63,7 @@ func ReadFile(fileName string) ([]byte, error) {
 	if !strings.Contains(contentType, "charset=utf-8") {
 		return nil, fmt.Errorf("file was not charset=utf-8, was %v, exit", contentType)
 	}
+	//reset file seeker to beginning of file
 	if _, err := file.Seek(0, 0); err != nil {
 		return nil, errors.Wrap(err, "failed to reset file after content check")
 	}
@@ -71,7 +72,7 @@ func ReadFile(fileName string) ([]byte, error) {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(Filter)
 
-	//temp key map
+	//todo for each scanned item add to hash map, use gomap for now.
 	store := make(map[string]int)
 	for scanner.Scan() {
 		if scanner.Text() != "" {
@@ -90,31 +91,38 @@ func ReadFile(fileName string) ([]byte, error) {
 		return nil, err
 	}
 
-	//fmt.Println(store)
-	type kv struct {
-		Key   string
-		Value int
-	}
+	return prettyPrint(sortStorage(store)), nil
+}
 
+//todo remove and replace with hash
+type kv struct {
+	Key   string
+	Value int
+}
+
+//sortStorage takes the hash and sorts into slice in descending order
+func sortStorage(store map[string]int) *[]kv {
 	ss := make([]kv, 0, 20)
 	for k, v := range store {
 		ss = append(ss, kv{k, v})
 	}
-
 	sort.Slice(ss, func(i, j int) bool {
 		return ss[i].Value > ss[j].Value
 	})
+	return &ss
+}
 
+//prettyPrint outputs in bytes same format as bash script
+const linesOuts = 20 //todo make this cmd line arg
+func prettyPrint(ss *[]kv) []byte {
 	var b bytes.Buffer
 	w := tabwriter.NewWriter(&b, 7, 0, 0, ' ', tabwriter.AlignRight)
-
-	for i, kv := range ss {
-		if i >= 20 {
+	for i, kv := range *ss {
+		if i >= linesOuts {
 			break
 		}
-		//this was a pita
 		fmt.Fprintf(w, "%d\t %s\n", kv.Value, kv.Key)
 	}
 	w.Flush()
-	return b.Bytes(), nil
+	return b.Bytes()
 }
